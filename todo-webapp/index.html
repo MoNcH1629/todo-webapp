@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tasks UI</title>
+
+  <!-- フォント -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- タブ -->
+    <div class="tabs">
+      <button class="tab tab--active" data-tab="tasks">TASKS</button>
+      <button class="tab" data-tab="completed">COMPLETED</button>
+      <button class="tab" data-tab="deleted">DELETED</button>
+    </div>
+
+    <!-- レイアウト：左カレンダー / 右メインタスク -->
+    <div class="layout">
+      <!-- 左：カレンダー + 今日のタスク -->
+      <aside class="sidebar">
+        <section class="calendar-section">
+          <div class="calendar-header">
+            <h2 class="calendar-title" id="calendar-title"></h2>
+          </div>
+          <div class="calendar" id="calendar"></div>
+        </section>
+
+        <section class="today-section">
+          <h3 class="today-title">Today</h3>
+          <div id="today-list" class="today-list"></div>
+        </section>
+      </aside>
+
+      <!-- 右：フィルタ + メインタスク -->
+      <main class="main">
+        <!-- タスク入力（名前だけ。詳細はモーダルで） -->
+        <div class="task-input">
+          <input id="task-name-input" type="text" placeholder="Task Name" />
+          <button class="task-input__add" id="add-task-btn">＋</button>
+        </div>
+
+        <!-- フィルタバー（TASKSタブの時だけ有効） -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label>
+              Sort
+              <select id="sort-select">
+                <option value="dateAsc">締切が近い順</option>
+                <option value="dateDesc">締切が遠い順</option>
+                <option value="createdDesc">作成が新しい順</option>
+              </select>
+            </label>
+
+            <label>
+              Assignee
+              <select id="assignee-filter">
+                <option value="all">すべて</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="filter-search">
+            <input id="search-input" type="text" placeholder="タスク名で検索" />
+          </div>
+        </div>
+        <div class="filter-info">
+          <span id="date-filter-label"></span>
+        </div>
+
+        <!-- メインタスクリスト -->
+        <div class="task-list" id="task-list"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ▼ 詳細編集モーダル -->
+  <div class="modal" id="task-modal">
+    <div class="modal__backdrop" id="modal-backdrop"></div>
+
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2 id="modal-title">タスクの詳細</h2>
+        <button class="modal__close" id="modal-close-btn">×</button>
+      </div>
+
+      <div class="modal__body">
+        <div class="modal__field">
+          <label for="modal-task-name">タスク名</label>
+          <input id="modal-task-name" type="text" />
+        </div>
+
+        <div class="modal__field">
+          <label for="modal-assignee">担当者</label>
+          <input id="modal-assignee" type="text" placeholder="例）佐藤" />
+        </div>
+
+        <div class="modal__field modal__field--row">
+          <div>
+            <label for="modal-deadline">締切日</label>
+            <input id="modal-deadline" type="date" />
+          </div>
+          <div>
+            <label for="modal-estimate">予想時間</label>
+            <input id="modal-estimate" type="text" placeholder="例）2h, 30min" />
+          </div>
+        </div>
+
+        <div class="modal__field">
+          <label for="modal-memo">メモ</label>
+          <textarea id="modal-memo" rows="4" placeholder="メモを書いてください"></textarea>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="modal__btn modal__btn--ghost" id="modal-cancel-btn">キャンセル</button>
+        <button class="modal__btn modal__btn--primary" id="modal-save-btn">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>
