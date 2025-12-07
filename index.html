@@ -20,6 +20,8 @@
       <button class="tab tab--active" data-tab="tasks">TASKS</button>
       <button class="tab" data-tab="completed">COMPLETED</button>
       <button class="tab" data-tab="deleted">DELETED</button>
+      <!-- ★ ガントチャートタブ -->
+      <button class="tab" data-tab="gantt">GANTT</button>
     </div>
 
     <!-- レイアウト：左カレンダー / 右メインタスク -->
@@ -39,44 +41,59 @@
         </section>
       </aside>
 
-      <!-- 右：フィルタ + メインタスク -->
+      <!-- 右：リストビュー or ガントビュー -->
       <main class="main">
-        <!-- タスク入力（名前だけ。詳細はモーダルで） -->
-        <div class="task-input">
-          <input id="task-name-input" type="text" placeholder="Task Name" />
-          <button class="task-input__add" id="add-task-btn">＋</button>
-        </div>
 
-        <!-- フィルタバー（TASKSタブの時だけ有効） -->
-        <div class="filter-bar">
-          <div class="filter-group">
-            <label>
-              Sort
-              <select id="sort-select">
-                <option value="dateAsc">締切が近い順</option>
-                <option value="dateDesc">締切が遠い順</option>
-                <option value="createdDesc">作成が新しい順</option>
-              </select>
-            </label>
-
-            <label>
-              Assignee
-              <select id="assignee-filter">
-                <option value="all">すべて</option>
-              </select>
-            </label>
+        <!-- ▼ リストビュー（TASKS / COMPLETED / DELETED のとき表示） -->
+        <div id="list-area">
+          <!-- タスク入力（名前だけ。詳細はモーダルで） -->
+          <div class="task-input">
+            <input id="task-name-input" type="text" placeholder="Task Name" />
+            <button class="task-input__add" id="add-task-btn">＋</button>
           </div>
 
-          <div class="filter-search">
-            <input id="search-input" type="text" placeholder="タスク名で検索" />
+          <!-- フィルタバー（TASKSタブの時だけ有効） -->
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>
+                Sort
+                <select id="sort-select">
+                  <option value="dateAsc">締切が近い順</option>
+                  <option value="dateDesc">締切が遠い順</option>
+                  <option value="createdDesc">作成が新しい順</option>
+                </select>
+              </label>
+
+              <label>
+                Assignee
+                <select id="assignee-filter">
+                  <option value="all">すべて</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="filter-search">
+              <input id="search-input" type="text" placeholder="タスク名で検索" />
+            </div>
           </div>
-        </div>
-        <div class="filter-info">
-          <span id="date-filter-label"></span>
+          <div class="filter-info">
+            <span id="date-filter-label"></span>
+          </div>
+
+          <!-- メインタスクリスト -->
+          <div class="task-list" id="task-list"></div>
         </div>
 
-        <!-- メインタスクリスト -->
-        <div class="task-list" id="task-list"></div>
+        <!-- ▼ ガントビュー（GANTTタブのとき表示） -->
+        <section class="gantt-month-section" id="gantt-month-section">
+          <div class="gantt-month-header-bar">
+            <button id="gantt-prev-month" class="gantt-nav-btn">‹</button>
+            <span id="gantt-current-month" class="gantt-month-title"></span>
+            <button id="gantt-next-month" class="gantt-nav-btn">›</button>
+          </div>
+          <div id="gantt-month-grid" class="gantt-month-grid"></div>
+        </section>
+
       </main>
     </div>
   </div>
@@ -99,7 +116,13 @@
 
         <div class="modal__field">
           <label for="modal-assignee">担当者</label>
-          <input id="modal-assignee" type="text" placeholder="例）佐藤" />
+          <!-- ★ 担当者プルダウン -->
+          <select id="modal-assignee">
+            <option value="">選択してください</option>
+            <option value="翼">翼</option>
+            <option value="美穂">美穂</option>
+            <option value="その他">その他</option>
+          </select>
         </div>
 
         <div class="modal__field modal__field--row">
