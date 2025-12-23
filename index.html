@@ -1,155 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>Tasks UI</title>
-
-  <!-- フォント -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>お問い合わせフォーム</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div class="app">
+  <div class="phone">
+    <div class="screen">
+      <header class="header">
+        <h1>お問い合わせ</h1>
+        <p>必要事項をご入力ください</p>
+      </header>
 
-    <!-- タブ -->
-    <div class="tabs">
-      <button class="tab tab--active" data-tab="tasks">TASKS</button>
-      <button class="tab" data-tab="completed">COMPLETED</button>
-      <button class="tab" data-tab="deleted">DELETED</button>
-      <!-- ★ ガントチャートタブ -->
-      <button class="tab" data-tab="gantt">GANTT</button>
-    </div>
-
-    <!-- レイアウト：左カレンダー / 右メインタスク -->
-    <div class="layout">
-      <!-- 左：カレンダー + 今日のタスク -->
-      <aside class="sidebar">
-        <section class="calendar-section">
-          <div class="calendar-header">
-            <h2 class="calendar-title" id="calendar-title"></h2>
-          </div>
-          <div class="calendar" id="calendar"></div>
-        </section>
-
-        <section class="today-section">
-          <h3 class="today-title">Today</h3>
-          <div id="today-list" class="today-list"></div>
-        </section>
-      </aside>
-
-      <!-- 右：リストビュー or ガントビュー -->
-      <main class="main">
-
-        <!-- ▼ リストビュー（TASKS / COMPLETED / DELETED のとき表示） -->
-        <div id="list-area">
-          <!-- タスク入力（名前だけ。詳細はモーダルで） -->
-          <div class="task-input">
-            <input id="task-name-input" type="text" placeholder="Task Name" />
-            <button class="task-input__add" id="add-task-btn">＋</button>
+      <main class="card">
+        <form novalidate>
+          <div class="field">
+            <label for="name">氏名（漢字） <span class="req">*</span></label>
+            <input id="name" class="control" type="text" name="name" placeholder="フルネーム入力推奨（カタカナ任意）" aria-required="true" required />
           </div>
 
-          <!-- フィルタバー（TASKSタブの時だけ有効） -->
-          <div class="filter-bar">
-            <div class="filter-group">
-              <label>
-                Sort
-                <select id="sort-select">
-                  <option value="dateAsc">締切が近い順</option>
-                  <option value="dateDesc">締切が遠い順</option>
-                  <option value="createdDesc">作成が新しい順</option>
-                </select>
-              </label>
+          <div class="field">
+            <label for="kana">フリガナ（カタカナ） <span class="req">*</span></label>
+            <input id="kana" class="control" type="text" name="kana" placeholder="例） タロウ" aria-required="true" required />
+          </div>
 
-              <label>
-                Assignee
-                <select id="assignee-filter">
-                  <option value="all">すべて</option>
-                </select>
-              </label>
-            </div>
+          <div class="field">
+            <label for="email">メールアドレス <span class="req">*</span></label>
+            <input id="email" class="control" type="email" name="email" placeholder="例） taro@example.com" aria-required="true" required />
+          </div>
 
-            <div class="filter-search">
-              <input id="search-input" type="text" placeholder="タスク名で検索" />
+          <div class="field">
+            <label for="tel">電話番号 <span class="req">*</span></label>
+            <input id="tel" class="control" type="tel" name="tel" inputmode="tel" pattern="[0-9\-\s]+" placeholder="例） 090-1234-5678 または 09012345678" aria-required="true" required />
+          </div>
+
+          <div class="field">
+            <label for="mansion-input">マンション名 <span class="req">*</span></label>
+            <input id="mansion-input" name="mansion" class="control" type="text" placeholder="担当・所属している物件名を入力してください" aria-required="true" required />
+          </div>
+
+          <div class="field">
+            <label for="inquiry">問い合わせ種別</label>
+            <div class="select-wrap">
+              <select id="inquiry" name="inquiry_type" class="control">
+                <option value="">選択してください（任意）</option>
+                <option value="管理人交代">管理人交代</option>
+                <option value="連絡先変更">連絡先変更</option>
+                <option value="その他">その他</option>
+              </select>
             </div>
           </div>
-          <div class="filter-info">
-            <span id="date-filter-label"></span>
+
+          <div class="field">
+            <label for="note">備考</label>
+            <textarea id="note" name="note" class="control textarea" placeholder="特記事項があれば入力" rows="4"></textarea>
           </div>
 
-          <!-- メインタスクリスト -->
-          <div class="task-list" id="task-list"></div>
-        </div>
-
-        <!-- ▼ ガントビュー（GANTTタブのとき表示） -->
-        <section class="gantt-month-section" id="gantt-month-section">
-          <div class="gantt-month-header-bar">
-            <button id="gantt-prev-month" class="gantt-nav-btn">‹</button>
-            <span id="gantt-current-month" class="gantt-month-title"></span>
-            <button id="gantt-next-month" class="gantt-nav-btn">›</button>
+          <div class="field consent">
+            <label class="consent-label">
+              <input id="consent" name="consent" type="checkbox" required />
+              個人情報の取り扱いに同意します
+            </label>
           </div>
-          <div id="gantt-month-grid" class="gantt-month-grid"></div>
-        </section>
 
+          <button class="btn" type="submit">送信する</button>
+
+          <p class="note">
+            お問い合わせ
+            <br />
+            必要事項をご入力ください
+          </p>
+        </form>
       </main>
     </div>
   </div>
 
-  <!-- ▼ 詳細編集モーダル -->
-  <div class="modal" id="task-modal">
-    <div class="modal__backdrop" id="modal-backdrop"></div>
-
-    <div class="modal__content">
-      <div class="modal__header">
-        <h2 id="modal-title">タスクの詳細</h2>
-        <button class="modal__close" id="modal-close-btn">×</button>
-      </div>
-
-      <div class="modal__body">
-        <div class="modal__field">
-          <label for="modal-task-name">タスク名</label>
-          <input id="modal-task-name" type="text" />
-        </div>
-
-        <div class="modal__field">
-          <label for="modal-assignee">担当者</label>
-          <!-- ★ 担当者プルダウン -->
-          <select id="modal-assignee">
-            <option value="">選択してください</option>
-            <option value="翼">翼</option>
-            <option value="美穂">美穂</option>
-            <option value="その他">その他</option>
-          </select>
-        </div>
-
-        <div class="modal__field modal__field--row">
-          <div>
-            <label for="modal-deadline">締切日</label>
-            <input id="modal-deadline" type="date" />
-          </div>
-          <div>
-            <label for="modal-estimate">予想時間</label>
-            <input id="modal-estimate" type="text" placeholder="例）2h, 30min" />
-          </div>
-        </div>
-
-        <div class="modal__field">
-          <label for="modal-memo">メモ</label>
-          <textarea id="modal-memo" rows="4" placeholder="メモを書いてください"></textarea>
-        </div>
-      </div>
-
-      <div class="modal__footer">
-        <button class="modal__btn modal__btn--ghost" id="modal-cancel-btn">キャンセル</button>
-        <button class="modal__btn modal__btn--primary" id="modal-save-btn">保存</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>
